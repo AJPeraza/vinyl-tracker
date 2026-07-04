@@ -1,79 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vinyl Tracker</title>
-    <link rel="stylesheet" href="style.css"/>
-</head>
-<body>
-    <h1>My Vinyl Tracker</h1>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <h1>My Vinyl Tracker</h1>
 
-    <p id="total-count"></p>
-    <p id="wishlist-count"></p>
-    <p id="owned-count"></p>
+      <p class="app-subtitle">
+        Track records you own and build a shareable wishlist for family and friends.
+      </p>
 
-    <input 
-        type="text"
-        id="search-input"
-        placeholder="Search vinyls..."
-    />
+      <section class="dashboard-panel">
+        <div class="stats-row">
+            <p id="total-count"></p>
+            <p id="wishlist-count"></p>
+            <p id="owned-count"></p>
+        </div>
 
-    <select id="priority-filter">
-        <option value="all">All Priorities</option>
-        <option value="high">High</option>
-        <option value="medium">Medium</option>
-        <option value="low">Low</option>
-    </select>
+        <div class="filter-row">
+          <input type="text" id="search-input" placeholder="Search vinyls..." />
 
-    <h2>Wishlist</h2>
-    <ul id="wishlist"></ul>
-    
-    <h2>Owned</h2>
-    <ul id="owned-list"></ul>
+          <select id="priority-filter">
+            <option value="all">All Priorities</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+      </section>
 
-    <form id="vinyl-form">
+      <section class="form-card">
+        <h2>Add / Edit Vinyl</h2>
 
-        <input 
+        <form id="vinyl-form">
+          <input
             type="text"
             id="cover-input"
             placeholder="Album cover image URL"
-        />
+          />
 
-        <input 
-            type="text"
-            id="title-input"
-            placeholder="Album Title"
-        />
+          <input type="text" id="title-input" placeholder="Album Title" />
 
-        <input
-            type="text"
-            id="artist-input"
-            placeholder="Artist"
-        />
+          <input type="text" id="artist-input" placeholder="Artist" />
 
-        <button type="button" id="cancel-edit-btn">
-            Cancel Edit
-        </button>
+          <button type="button" id="cancel-edit-btn">Cancel Edit</button>
 
-        <button type="submit" id="submit-btn">
-            Add Vinyl
-        </button>
+          <button type="submit" id="submit-btn">Add Vinyl</button>
 
-        <select id="status-input">
+          <select id="status-input">
             <option value="wishlist">Wishlist</option>
             <option value="owned">Owned</option>
-        </select>
+          </select>
 
-        <select id="priority-input">
+          <select id="priority-input">
             <option value="high">High Priority</option>
             <option value="medium">Medium Priority</option>
             <option value="low">Low Priority</option>
-        </select>
-    </form>
+          </select>
+        </form>
+      </section>
 
-    
+      <h2>Wishlist</h2>
+      <ul id="wishlist"></ul>
+
+      <h2>Owned</h2>
+      <ul id="owned-list"></ul>
+
+      
+    </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

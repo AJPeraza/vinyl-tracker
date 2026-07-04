@@ -22,9 +22,9 @@ let vinyls = JSON.parse(localStorage.getItem("vinyls")) || [
 
 const wishlist = document.getElementById("wishlist");
 const form = document.getElementById("vinyl-form");
+const ownedList = document.getElementById("owned-list");
 const titleInput = document.getElementById("title-input");
 const artistInput = document.getElementById("artist-input");
-const ownedList = document.getElementById("owned-list");
 const statusInput = document.getElementById("status-input");
 const coverInput = document.getElementById("cover-input");
 const priorityInput = document.getElementById("priority-input");
@@ -161,6 +161,12 @@ function renderVinyls() {
         priority.classList.add("priority", vinyl.priority);
 
         li.appendChild(priority);
+
+        const status = document.createElement("span");
+        status.textContent = vinyl.status;
+        status.classList.add("status", vinyl.status);
+
+        li.appendChild(status);
 
         const editBtn = document.createElement("button");
         editBtn.textContent = "Edit";
