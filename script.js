@@ -1,24 +1,4 @@
-let vinyls = JSON.parse(localStorage.getItem("vinyls")) || [
-    {
-        id: crypto.randomUUID(),
-        title: "Rumours",
-        artist: "Fleetwood Mac",
-        status: "wishlist"
-    },
-    {
-        id: crypto.randomUUID(),
-        title: "The Wall",
-        artist: "Pink Floyd",
-        status: "wishlist"
-    },
-    {
-        id: crypto.randomUUID(),
-        title: "Man on the Moon",
-        artist: "Kid Cudi",
-        status: "wishlist"
-    }
-   
-    ];
+let vinyls = JSON.parse(localStorage.getItem("vinyls")) || [];
 
 const wishlist = document.getElementById("wishlist");
 const form = document.getElementById("vinyl-form");
@@ -132,117 +112,33 @@ function renderVinyls() {
     });
 
     filteredVinyls.forEach((vinyl) => {
-
         //create list item
-        const li = document.createElement("li");
+        const li = createVinylCard(vinyl);
 
-        //li.textContent = `${vinyl.title} - ${vinyl.artist}`;
-        const title = document.createElement("h3");
-        title.textContent = vinyl.title;
-
-        const artist = document.createElement("p");
-        artist.textContent = vinyl.artist;
-
-        li.appendChild(title);
-        li.appendChild(artist);
-
-
-        //render album cover
-        const cover = document.createElement("img");
-        cover.src = vinyl.cover;
-        cover.alt = `${vinyl.title} album cover`;
-        cover.classList.add("album-cover");
-
-        li.appendChild(cover);
-
-        //render priority
-        const priority = document.createElement("span");
-        priority.textContent = vinyl.priority;
-        priority.classList.add("priority", vinyl.priority);
-
-        li.appendChild(priority);
-
-        const status = document.createElement("span");
-        status.textContent = vinyl.status;
-        status.classList.add("status", vinyl.status);
-
-        li.appendChild(status);
-
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "Edit";
-
-        editBtn.addEventListener("click", () => {
-            console.log("Editing:", vinyl);
-
-            editingId = vinyl.id;
-
-            titleInput.value = vinyl.title;
-            artistInput.value = vinyl.artist;
-            coverInput.value = vinyl.cover || "";
-            statusInput.value = vinyl.status;
-            priorityInput.value = vinyl.priority || "medium";
-
-            submitBtn.textContent = "Save Changes";
-
-            form.scrollIntoView({ behavior: "smooth" });
-        });
-
-        const toggleBtn = document.createElement("button");
-
+        //conditional rendering
         if (vinyl.status === "wishlist") {
-            toggleBtn.textContent = "Mark as Owned";
-        } else {
-            toggleBtn.textContent = "Move to Wishlist";
-        }
-
-        toggleBtn.addEventListener("click", () => {
-            if (vinyl.status === "wishlist") {
-                vinyl.status = "owned";
-            } else {
-                vinyl.status = "wishlist";
-            }
-
-            saveVinyls();
-            renderVinyls();
-        });
-
-        //create delete button
-        const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "Delete";
-
-        //delete logic
-        deleteBtn.addEventListener("click", () => {
-            vinyls = vinyls.filter((item) => item.id !== vinyl.id);
-            
-            saveVinyls();
-            renderVinyls();
-        });
-
-       //put button INSIDe the li
-       const buttonGroup = document.createElement("div");
-       buttonGroup.classList.add("button-group");
-
-       buttonGroup.appendChild(toggleBtn);
-       buttonGroup.appendChild(editBtn);
-       buttonGroup.appendChild(deleteBtn);
-       
-
-       li.appendChild(buttonGroup);
-
-       //conditional rendering
-       if (vinyl.status === "wishlist") {
         wishlist.appendChild(li);
-       } else {
-       ownedList.appendChild(li);
-       }
+        } else {
+        ownedList.appendChild(li);
+        }
     });
 
     if (wishlist.children.length === 0) {
-        wishlist.innerHTML = "<li>No wishlist records found.</li>";
+        wishlist.innerHTML = `
+            <li class="empty-state">
+                <h3>📀 Wishlist is empty</h3>
+                <p>Add a record above to start your wishlist.</p>
+            </li>
+        `;
     }
 
     if (ownedList.children.length === 0) {
-        ownedList.innerHTML = "<li>No owned records found.</li>";
+        ownedList.innerHTML = `
+            <li class="empty-state">
+                <h3>🎵 No owned records yet</h3>
+                <p>Mark records as owned to build your collection.</p>
+            </li>
+        `;
     }
 
 };
@@ -273,6 +169,133 @@ function renderStats() {
     }`;
 }
 
+function createBadgeRow(vinyl) {
+    const badgeRow = document.createElement("div");
+    badgeRow.classList.add("badge-row");
+
+    const priority = document.createElement("span");
+    priority.textContent = vinyl.priority;
+    priority.classList.add("priority", vinyl.priority);
+
+    const status = document.createElement("span");
+    status.textContent = vinyl.status;
+    status.classList.add("status", vinyl.status);
+
+    badgeRow.appendChild(priority);
+    badgeRow.appendChild(status);
+
+    return badgeRow;
+}
+
+function createButtonGroup(vinyl) {
+    const buttonGroup = document.createElement("div");
+    buttonGroup.classList.add("button-group"); 
+
+    const toggleBtn = document.createElement("button");
+    toggleBtn.classList.add("toggle-btn");
+
+    if (vinyl.status === "wishlist") {
+        toggleBtn.textContent = "Mark as Owned";
+    } else {
+        toggleBtn.textContent = "Move to Wishlist";
+    }
+
+    toggleBtn.addEventListener("click", () => {
+        if (vinyl.status === "wishlist") {
+            vinyl.status = "owned";
+        } else {
+            vinyl.status = "wishlist";
+        }
+
+        saveVinyls();
+        renderVinyls();
+    });
+
+    const editBtn = document.createElement("button");
+    editBtn.classList.add("edit-btn");
+    editBtn.textContent = "Edit";
+
+    editBtn.addEventListener("click", () => {
+        console.log("Editing:", vinyl);
+
+        editingId = vinyl.id;
+
+        titleInput.value = vinyl.title;
+        artistInput.value = vinyl.artist;
+        coverInput.value = vinyl.cover || "";
+        statusInput.value = vinyl.status;
+        priorityInput.value = vinyl.priority || "medium";
+
+        submitBtn.textContent = "Save Changes";
+
+        form.scrollIntoView({ behavior: "smooth" });
+    });
+    
+    const deleteBtn = document.createElement("button");
+    deleteBtn.classList.add("delete-btn");
+    deleteBtn.textContent = "Delete";
+
+    //delete logic
+    deleteBtn.addEventListener("click", () => {
+        vinyls = vinyls.filter((item) => item.id !== vinyl.id);
+        
+        saveVinyls();
+        renderVinyls();
+    });
+
+    buttonGroup.appendChild(toggleBtn);
+    buttonGroup.appendChild(editBtn);
+    buttonGroup.appendChild(deleteBtn);
+
+    return buttonGroup;
+}
+
+function createVinylInfo(vinyl) {
+    const info = document.createElement("div");
+    info.classList.add("vinyl-info");
+
+    const title = document.createElement("h3");
+    title.textContent = vinyl.title;
+
+    const artist = document.createElement("p");
+    artist.textContent = vinyl.artist;
+
+    info.appendChild(title);
+    info.appendChild(artist);
+
+    return info;
+}
+
+function createAlbumCover(vinyl) {
+    const cover = document.createElement("img");
+        
+    if (vinyl.cover) {
+        cover.src = vinyl.cover;
+    } else {
+        cover.src = "https://placehold.co/400x400?text=No+Cover"; 
+    }
+
+    cover.alt = `${vinyl.title} album cover`;
+    cover.classList.add("album-cover");
+
+    return cover;
+}
+
+function createVinylCard(vinyl) {
+    const li = document.createElement("li");
+
+    const info = createVinylInfo(vinyl);
+    const cover = createAlbumCover(vinyl);
+    const badgeRow = createBadgeRow(vinyl);
+    const buttonGroup = createButtonGroup(vinyl);
+
+    li.appendChild(info);
+    li.appendChild(cover);
+    li.appendChild(badgeRow);
+    li.appendChild(buttonGroup);
+
+    return li;
+}
 
 renderVinyls();
 
