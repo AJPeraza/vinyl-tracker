@@ -11,14 +11,15 @@
       <h1>My Vinyl Tracker</h1>
 
       <p class="app-subtitle">
-        Track records you own and build a shareable wishlist for family and friends.
+        Track records you own and build a shareable wishlist for family and
+        friends.
       </p>
 
       <section class="dashboard-panel">
         <div class="stats-row">
-            <p id="total-count"></p>
-            <p id="wishlist-count"></p>
-            <p id="owned-count"></p>
+          <p id="total-count"></p>
+          <p id="wishlist-count"></p>
+          <p id="owned-count"></p>
         </div>
 
         <div class="filter-row">
@@ -29,6 +30,13 @@
             <option value="high">High</option>
             <option value="medium">Medium</option>
             <option value="low">Low</option>
+          </select>
+
+          <select id="sort-filter">
+            <option value="newest">Newest Added</option>
+            <option value="title">Album A-Z</option>
+            <option value="artist">Artist A-Z</option>
+            <option value="priority">Priority</option>
           </select>
         </div>
       </section>
@@ -47,10 +55,6 @@
 
           <input type="text" id="artist-input" placeholder="Artist" />
 
-          <button type="button" id="cancel-edit-btn">Cancel Edit</button>
-
-          <button type="submit" id="submit-btn">Add Vinyl</button>
-
           <select id="status-input">
             <option value="wishlist">Wishlist</option>
             <option value="owned">Owned</option>
@@ -61,6 +65,10 @@
             <option value="medium">Medium Priority</option>
             <option value="low">Low Priority</option>
           </select>
+
+          <button type="submit" id="submit-btn">Add Vinyl</button>
+          <button type="button" id="cancel-edit-btn">Cancel Edit</button>
+          
         </form>
       </section>
 
@@ -69,9 +77,9 @@
 
       <h2>Owned</h2>
       <ul id="owned-list"></ul>
-
-      
     </div>
+
+    <div id="toast"></div>
 
     <script src="script.js"></script>
   </body>

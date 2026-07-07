@@ -1,4 +1,4 @@
-let vinyls = JSON.parse(localStorage.getItem("vinyls")) || [];
+let vinyls = JSON.parse(localStorage.getItem("vinyl-tracker-records")) || [];
 
 const wishlist = document.getElementById("wishlist");
 const form = document.getElementById("vinyl-form");
@@ -15,6 +15,8 @@ const submitBtn = document.getElementById("submit-btn");
 const totalCount = document.getElementById("total-count");
 const wishlistCount = document.getElementById("wishlist-count");
 const ownedCount = document.getElementById("owned-count");
+const sortFilter = document.getElementById("sort-filter");
+const toast = document.getElementById("toast");
 
 let editingId = null;
 
@@ -27,7 +29,7 @@ form.addEventListener("submit", (event) => {
         return;
     }
 
-    if (editingId) {
+    if (editingId !== null) {
 
         //UPDATE EXISTING VINYL
         vinyls = vinyls.map((vinyl) => {
@@ -48,6 +50,8 @@ form.addEventListener("submit", (event) => {
 
         editingId = null;
 
+        showToast("✏️ Vinyl Updated!");
+
     } else {
         //CREATE NEW VINYL
         const newVinyl = {
@@ -60,6 +64,8 @@ form.addEventListener("submit", (event) => {
         };
 
         vinyls.push(newVinyl);
+
+        showToast("✅ Vinyl added!");
 
     }
 
@@ -83,6 +89,10 @@ priorityFilter.addEventListener("change", () => {
 cancelEditBtn.addEventListener("click", () => {
     resetForm();
 });
+
+sortFilter.addEventListener("change", () => {
+    renderVinyls();
+})
 
 function renderVinyls() {
     wishlist.innerHTML = "";
@@ -109,6 +119,30 @@ function renderVinyls() {
 
         return matchesSearch && matchesPriority;
         
+    });
+
+    const selectedSort = sortFilter.value;
+
+    filteredVinyls.sort((a, b) => {
+        if (selectedSort === "title") {
+            return a.title.localeCompare(b.title);
+        }
+
+        if (selectedSort === "artist") {
+            return a.artist.localeCompare(b.artist);
+        }
+
+        if (selectedSort === "priority") {
+            const priorityOrder = {
+                high: 1,
+                medium: 2,
+                low: 3
+            };
+
+            return priorityOrder[a.priority] - priorityOrder[b.priority];
+        }
+
+        return 0;
     });
 
     filteredVinyls.forEach((vinyl) => {
@@ -203,8 +237,10 @@ function createButtonGroup(vinyl) {
     toggleBtn.addEventListener("click", () => {
         if (vinyl.status === "wishlist") {
             vinyl.status = "owned";
+            showToast("📀 Marked as owned!");
         } else {
             vinyl.status = "wishlist";
+            showToast("📝 Moved to wishlist!");
         }
 
         saveVinyls();
@@ -237,7 +273,14 @@ function createButtonGroup(vinyl) {
 
     //delete logic
     deleteBtn.addEventListener("click", () => {
+        const confirmed = confirm(`Delete "${vinyl.title}" by ${vinyl.artist}?`);
+
+        if (!confirmed) {
+            return;
+        }
+
         vinyls = vinyls.filter((item) => item.id !== vinyl.id);
+        showToast("🗑️ Vinyl deleted!");
         
         saveVinyls();
         renderVinyls();
@@ -295,6 +338,15 @@ function createVinylCard(vinyl) {
     li.appendChild(buttonGroup);
 
     return li;
+}
+
+function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2000);
 }
 
 renderVinyls();

@@ -11,7 +11,7 @@
 body {
     background-color: var(--background);
     color: white;
-    font-family: Arial, sans-serif;
+    font-family: 'Inter';
     margin: 0;
     padding: 24px;
 }
@@ -266,4 +266,34 @@ button:hover {
 
 .filter-row input {
     flex: 1;
+}
+
+#toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+
+    background-color: #222;
+    color: white;
+
+    padding: 14px 20px;
+    border-radius: 10px;
+
+    border-left: 5px solid var(--accent);
+
+    font-weight: bold;
+
+    opacity: 0;
+    transform: translateY(20px);
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+
+    pointer-events: none;
+}
+
+#toast.show {
+    opacity: 1;
+    transform: translateY(0);
 }
